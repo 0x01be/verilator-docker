@@ -1,6 +1,6 @@
 FROM alpine:3.12.0 as builder
 
-RUN apk add --no-cache add --virtual build-dependencies \
+RUN apk --no-cache add --virtual build-dependencies \
     build-base \
     autoconf \
     git \
