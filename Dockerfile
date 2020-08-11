@@ -1,4 +1,4 @@
-FROM 0x01be/alpine:edge as builder
+FROM alpine as builder
 
 RUN apk --no-cache add --virtual verilator-build-dependencies \
     build-base \
@@ -13,7 +13,7 @@ RUN apk --no-cache add --virtual verilator-build-dependencies \
     ccache \
     numactl-dev
 
-RUN git clone https://git.veripool.org/git/verilator /verilator
+RUN git clone --depth 1 https://git.veripool.org/git/verilator /verilator
 
 WORKDIR /verilator
 
@@ -22,9 +22,12 @@ RUN ./configure --prefix /opt/verilator/
 RUN make
 RUN make install
 
-FROM 0x01be/alpine:edge
+FROM alpine
 
 COPY --from=builder /opt/verilator/ /opt/verilator/
 
 ENV PATH $PATH:/opt/verilator/bin/
+
+VOLUME /workspace
+WORKDIR /workspace
 
