@@ -28,6 +28,5 @@ COPY --from=builder /opt/verilator/ /opt/verilator/
 
 ENV PATH $PATH:/opt/verilator/bin/
 
-VOLUME /workspace
 WORKDIR /workspace
 
