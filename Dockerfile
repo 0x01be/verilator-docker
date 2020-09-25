@@ -26,6 +26,9 @@ FROM alpine
 
 COPY --from=builder /opt/verilator/ /opt/verilator/
 
+RUN apk --no-cache add --virtual verilator-runtime-dependencies \
+    perl
+
 ENV PATH $PATH:/opt/verilator/bin/
 
 WORKDIR /workspace
