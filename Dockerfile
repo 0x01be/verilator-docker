@@ -24,12 +24,13 @@ FROM 0x01be/base
 
 COPY --from=build /opt/verilator/ /opt/verilator/
 
+WORKDIR /workspace
+
 RUN apk --no-cache add --virtual verilator-runtime-dependencies \
     perl &&\
     adduser -D -u 1000 verilator &&\
     chown verilator:verilator /workspace
 
 USER verilator
-WORKDIR /workspace
 ENV PATH=${PATH}:/opt/verilator/bin/
 
