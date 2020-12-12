@@ -1,5 +1,7 @@
-FROM alpine as build
+FROM 0x01be/base as build
 
+ENV REVISION=master
+WORKDIR /verilator
 RUN apk --no-cache add --virtual verilator-build-dependencies \
     build-base \
     autoconf \
@@ -11,32 +13,23 @@ RUN apk --no-cache add --virtual verilator-build-dependencies \
     flex-dev \
     zlib-dev \
     ccache \
-    numactl-dev
-
-ENV VERILATOR_REVISION master
-RUN git clone --depth 1 --branch ${VERILATOR_REVISION} https://git.veripool.org/git/verilator /verilator
-
-WORKDIR /verilator
-
-RUN autoconf
-RUN ./configure --prefix /opt/verilator/
-RUN make
+    numactl-dev &&\
+    git clone --depth 1 --branch ${VERILATOR_REVISION} https://git.veripool.org/git/verilator /verilator &&\
+    autoconf &&\
+    ./configure --prefix /opt/verilator/ &&\
+    make
 RUN make install
 
-FROM alpine
+FROM 0x01be/base
 
 COPY --from=build /opt/verilator/ /opt/verilator/
 
 RUN apk --no-cache add --virtual verilator-runtime-dependencies \
-    perl
-
-RUN adduser -D -u 1000 verilator
-
-WORKDIR /workspace
-
-RUN chown verilator:verilator /workspace
+    perl &&\
+    adduser -D -u 1000 verilator &&\
+    chown verilator:verilator /workspace
 
 USER verilator
-
-ENV PATH $PATH:/opt/verilator/bin/
+WORKDIR /workspace
+ENV PATH=${PATH}:/opt/verilator/bin/
 
