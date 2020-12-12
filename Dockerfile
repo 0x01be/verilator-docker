@@ -14,7 +14,7 @@ RUN apk --no-cache add --virtual verilator-build-dependencies \
     zlib-dev \
     ccache \
     numactl-dev &&\
-    git clone --depth 1 --branch ${VERILATOR_REVISION} https://git.veripool.org/git/verilator /verilator &&\
+    git clone --depth 1 --branch ${REVISION} https://git.veripool.org/git/verilator /verilator &&\
     autoconf &&\
     ./configure --prefix /opt/verilator/ &&\
     make
